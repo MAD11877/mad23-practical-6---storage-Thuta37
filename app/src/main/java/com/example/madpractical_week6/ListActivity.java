@@ -21,6 +21,7 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
         List<User> userList = new ArrayList<>();
+        MyDBhandler dbHandler = new MyDBhandler(this, null, null,1);
 
         for (int i = 0; i < 20; i++) {
             User user = new User();
@@ -40,6 +41,7 @@ public class ListActivity extends AppCompatActivity {
             user.setFollowed(randomFollowed);
 
             userList.add(user);
+            dbHandler.addUser(user);
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
