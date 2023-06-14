@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,22 +19,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    User user = new User();
-    boolean followed = user.getFollowed();
+    //User user = new User();
+    //boolean followed = user.getFollowed();
 
     public void onFollowClick(View v) {
-        if (followed) {
+        if (user.getFollowed()) {
             Toast.makeText(getBaseContext(), "Unfollowed", Toast.LENGTH_SHORT).show();
             Button button = (Button) findViewById(R.id.btnFollow);
             button.setText("FOLLOW");
-            followed = false;
+            user.setFollowed(false);
         } else {
             Toast.makeText(getBaseContext(), "Followed", Toast.LENGTH_SHORT).show();
             Button button = (Button) findViewById(R.id.btnFollow);
             button.setText("UNFOLLOW");
-            followed = true;
+            user.setFollowed(true);
         }
 
+        // Update the database
+        MyDBhandler dbHandler = new MyDBhandler(this, null, null, 1);
+        dbHandler.updateUser(user);
     }
 
     public void onMessageClick(View v) {
@@ -44,21 +48,27 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        // receive data from ListActivity
-        Intent intent = getIntent();
-        String name = intent.getStringExtra("USERNAME");
-        String description = intent.getStringExtra("DESCRIPTION");
-        followed = intent.getBooleanExtra("FOLLOWED", false);
-        TextView nametext = findViewById(R.id.textView);
-        TextView descriptiontext = findViewById(R.id.textView2);
-        Button folllowbutton = findViewById(R.id.btnFollow);
-        nametext.setText(name);
-        descriptiontext.setText(description);
 
-        if (followed) {
-            folllowbutton.setText("UNFOLLOW");
-        } else {
-            folllowbutton.setText("FOLLOW");
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("USER_OBJECT");
+        if (user != null) {
+            // Use the user object as needed
+            String name = user.getName();
+            String description = user.getDescription();
+            boolean followed = user.getFollowed();
+
+            // Update the UI with the user data
+            TextView nametext = findViewById(R.id.textView);
+            TextView descriptiontext = findViewById(R.id.textView2);
+            Button followButton = findViewById(R.id.btnFollow);
+            nametext.setText(name);
+            descriptiontext.setText(description);
+
+            if (followed) {
+                followButton.setText("UNFOLLOW");
+            } else {
+                followButton.setText("FOLLOW");
+            }
         }
 
     }

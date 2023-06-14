@@ -134,9 +134,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         // Replace UserProfileActivity.class with your actual activity class
                         Intent intent = new Intent(context, MainActivity.class);
                         // Pass any necessary data to the profile activity using intent extras
-                        intent.putExtra("USERNAME", user.getName());
-                        intent.putExtra("DESCRIPTION", user.getDescription());
-                        intent.putExtra("FOLLOWED", user.getFollowed());
+                        intent.putExtra("USER_OBJECT", user);
                         context.startActivity(intent);
                     }
                 })

@@ -95,6 +95,17 @@ public class MyDBhandler extends SQLiteOpenHelper {
         return userList;
     }
 
+    public void updateUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FOLLOWED, user.getFollowed() ? 1 : 0);
+
+        db.update(TABLE_USERS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(user.getId())});
+
+        db.close();
+    }
+
 
 }
 
